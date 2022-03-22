@@ -89,17 +89,19 @@ favoriteRouter.route('/:campsiteId')
             //console.log(req.params.campsiteId)
                 //console.log(favorites.campsites)
             if (req.params.campsiteId.indexOf(favorites.campsites) === -1){
-                Favorite.create({
-                    user: req.user._id,
-                    campsites: req.params.campsiteId
-                })
+                favorites.campsites.push(req.params.campsiteId);
+                console.log('Adding')
+                favorites.save()
                 .then(favorites => {
-                    console.log('Favorite Created ', favorites);
-                    res.statusCode = 200;
+                    res.statusCode = 200
                     res.setHeader('Content-Type', 'application/json');
                     res.json(favorites);
                 })
-            } else {
+                .catch(err => next(err))
+                
+            } 
+            
+            else {
                 res.statusCode = 403;
                 res.end('That campsite is already in the list of favorites!')
             }
